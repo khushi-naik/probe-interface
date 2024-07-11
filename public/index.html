@@ -1,0 +1,19 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Form to Google Sheet</title>
+</head>
+<body>
+  <h1>Submit Form to Google Sheet</h1>
+  <form action="/submit" method="POST">
+    <input name="participant" type="text" placeholder="participant" required>
+    <input name="probe" type="text" placeholder="probe" required>
+    <input name="question" type="text" placeholder="question" required>
+  
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

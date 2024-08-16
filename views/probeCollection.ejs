@@ -1,0 +1,165 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Form to Google Sheet</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .notification {
+      background-color: #4CAF50; /* Green */
+      color: white;
+      padding: 15px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      display: none; /* Initially hidden */
+    }
+
+    .section:last-child {
+    border-right: 1px solid #fff;
+     }
+
+    .greyed-out {
+      background-color: grey;
+      text-decoration: dashed;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .random{
+        background-color: black; 
+    }
+
+    .tick {
+      margin-left: 10px;
+    }
+
+    .last {
+      
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="container">
+    <h1>Report on Vital Trends</h1>
+  <% if (message) { %>
+    <div id="notification" class="notification"><%= message %></div>
+  <% } %>
+    <form action="/submit" method="POST">
+      <div class="section">
+        <h2>Vital Type</h2>
+        <div class="button-group">
+          <button id="hr" type="button" data-color="#44ff44" onclick="selectVitalType('vitalType1', this)"
+          class=<%= vitalState && vitalState['Heart Rate'] ? "greyed-out" : "random" %> ><img src="hr.png" alt="Heart Rate Icon"> Heart Rate <%= vitalState && vitalState['Heart Rate'] ? "✔️" : "" %></button>
+          <button id="bp" type="button" data-color="#ff4444" onclick="selectVitalType('vitalType2', this)"
+          class=<%= vitalState && vitalState['Blood Pressure'] ? "greyed-out" : "random" %> ><img src="bp.png" alt="blood pressure Icon"> Blood Pressure <%= vitalState && vitalState['Blood Pressure'] ? "✔️" : "" %></button>
+          <button id="os" type="button" data-color="#4444ff" onclick="selectVitalType('vitalType3', this)"
+          class=<%= vitalState && vitalState['Oxygen Saturation'] ? "greyed-out" : "random" %> ><img src="os.png" alt="oxygen Icon"> Oxygen Saturation <%= vitalState && vitalState['Oxygen'] ? "✔️" : "" %></button>
+        </div>
+        <input type="radio" id="vitalType1" name="vitalType" value="Heart Rate" required style="display:none;">
+        <input type="radio" id="vitalType2" name="vitalType" value="Blood Pressure" required style="display:none;">
+        <input type="radio" id="vitalType3" name="vitalType" value="Oxygen" required style="display:none;">
+      </div>
+
+      <div class="section">
+        <h2>Current Condition</h2>
+        <div class="button-group" id="currentConditionGroup">
+          <button type="button" onclick="selectRadio('currentCondition1')"><img src="up.png" alt="vhigh Icon"><img src="up.png" alt="vhigh Icon"> Very High</button>
+          <button type="button" onclick="selectRadio('currentCondition2')"><img src="up.png" alt="high Icon"> High</button>
+          <button type="button" onclick="selectRadio('currentCondition3')">Normal</button>
+          <button type="button" onclick="selectRadio('currentCondition4')"><img src="down.png" alt="low Icon"> Low</button>
+          <button type="button" onclick="selectRadio('currentCondition5')"><img src="down.png" alt="vlow Icon"><img src="down.png" alt="vlow Icon"> Very Low</button>
+        </div>
+        <input type="radio" id="currentCondition1" name="currentCondition" value="VeryHigh" required style="display:none;">
+        <input type="radio" id="currentCondition2" name="currentCondition" value="High" required style="display:none;">
+        <input type="radio" id="currentCondition3" name="currentCondition" value="Normal" required style="display:none;">
+        <input type="radio" id="currentCondition4" name="currentCondition" value="Low" required style="display:none;">
+        <input type="radio" id="currentCondition5" name="currentCondition" value="VeryLow" required style="display:none;">
+      </div>
+
+      <div class="section">
+        <h2>Trend</h2>
+        <div class="button-group last" id="trendGroup">
+          <button type="button" onclick="selectRadio('trend1',this)"><img src="increase.png" alt="increasing Icon"> Increasing</button>
+          <button type="button" onclick="selectRadio('trend2',this)">Static</button>
+          <button type="button" onclick="selectRadio('trend3',this)"><img src="decrease.png" alt="decreasing Icon"> Decreasing</button>
+        </div>
+        <input type="radio" id="trend1" name="trend" value="Increasing" required style="display:none;">
+        <input type="radio" id="trend2" name="trend" value="Static" required style="display:none;">
+        <input type="radio" id="trend3" name="trend" value="Decreasing" required style="display:none;">
+      </div>
+
+      <div style="display: flex; justify-content: right; width: 89%;">
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    //let selectedVitalTypes = <%=vitalState%>;
+
+    function selectVitalType(id, button) {
+      document.getElementById(id).checked = true;
+      
+      if(button){
+        const selectedColor = button.getAttribute('data-color');
+        /*const tick = '✔️';
+
+        button.classList.add('greyed-out');
+        button.innerHTML += `<span class="tick">${tick}</span>`;
+        selectedVitalTypes[id] = true;
+        */
+        // Change button colors for Current Condition
+        const currentConditionButtons = document.getElementById('currentConditionGroup').getElementsByTagName('button');
+        //console.log(currentConditionButtons.length);
+        for (let btn of currentConditionButtons) {
+            btn.style.backgroundColor = selectedColor;
+        }
+
+        // Change button colors for Trend
+        const trendButtons = document.getElementById('trendGroup').getElementsByTagName('button');
+        for (let btn of trendButtons) {
+            btn.style.backgroundColor = selectedColor;
+        }
+    }
+    /*if (Object.keys(selectedVitalTypes).length === 3) {
+          setTimeout(resetForm, 1000); // Reset after 1 second
+        }*/
+      
+    }
+
+    function resetForm() {
+      const buttons = document.querySelectorAll('.button-group button');
+      for (let button of buttons) {
+        button.classList.remove('greyed-out');
+        button.style.backgroundColor = '#44ff44'; // Reset to original color
+        button.querySelector('.tick')?.remove(); // Remove the tick if it exists
+      }
+      //selectedVitalTypes = {}; // Reset the selected states
+    }
+
+    function selectRadio(id, button) {
+      document.getElementById(id).checked = true;
+    
+      if(button){
+        //const tick = '✔️';
+        //button.innerHTML += `<span class="tick">${tick}</span>`;
+      }
+    }
+
+    window.onload = function() {
+      var notification = document.getElementById('notification');
+      if (notification) {
+        notification.style.display = 'block';
+        setTimeout(function() {
+          notification.style.display = 'none';
+        }, 3000); // Hide after 3 seconds
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Form to Google Sheet</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .notification {
+      background-color: #4CAF50; /* Green */
+      color: white;
+      padding: 15px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      display: none; /* Initially hidden */
+    }
+  </style>
+</head>
+<body>
+  <h1>Submit Form to Google Sheet</h1>
+  <% if (message) { %>
+    <div id="notification" class="notification"><%= message %></div>
+  <% } %>
+  <form action="/submit" method="POST">
+    
+    <label for="vitalType">Vital Type:</label><br>
+    <input type="radio" id="heartRate" name="vitalType" value="Heart Rate">
+    <label for="heartRate">Heart Rate</label><br>
+    <input type="radio" id="bloodPressure" name="vitalType" value="Blood Pressure">
+    <label for="bloodPressure">Blood Pressure</label><br>
+    <input type="radio" id="oxygen" name="vitalType" value="Oxygen">
+    <label for="oxygen">Oxygen</label><br>
+    <label for="currentCondition">Current Condition:</label><br>
+    <input type="radio" id="stable" name="currentCondition" value="Stable">
+    <label for="stable">Stable</label><br>
+    <input type="radio" id="unstable" name="currentCondition" value="Unstable">
+    <label for="unstable">Unstable</label><br>
+    <label for="trend">Trend:</label><br>
+    <input type="radio" id="improving" name="trend" value="Improving">
+    <label for="improving">Improving</label><br>
+    <input type="radio" id="deteriorating" name="trend" value="Deteriorating">
+    <label for="deteriorating">Deteriorating</label><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    window.onload = function() {
+      var notification = document.getElementById('notification');
+      if (notification) {
+        notification.style.display = 'block';
+        setTimeout(function() {
+          notification.style.display = 'none';
+        }, 3000); // Hide after 3 seconds
+      }
+    }
+  </script>
+</body>
+</html>

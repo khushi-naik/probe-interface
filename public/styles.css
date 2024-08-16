@@ -1,0 +1,143 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  
+  /*form {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  label {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  */
+  .notification {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 15px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: none; /* Initially hidden */
+  }
+
+  .land{
+    text-align: center;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: center;
+    width: 95%;
+    height: 90%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .section {
+    flex: 1;
+    display: inline-block; 
+    width: 30%;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-right: 1px solid #e4e7e5;
+    height: 77%;
+  }
+
+  .section:last-child {
+    border-right: none;
+  }
+
+  .section h2 {
+    margin-bottom: 20px;
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .button-group button {
+    align-items: center;
+    padding: 10px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 5px;
+    /*background-color: #007bff;*/
+    color: white;
+    cursor: pointer;
+    font-size: 37px;
+    font-weight: 400;
+  }
+
+  /*.button-group button:hover {
+    background-color: #0056b3;
+  }*/
+  #hr{
+    background-color: #66ff66;
+  }
+  #hr:hover{
+    background-color: #44ff44;
+  }
+
+  #bp{
+    background-color: #ff6666;
+  }
+  #bp:hover{
+    background-color: #ff4444;
+  }
+
+  #os{
+    background-color: #6666ff;
+  }
+  #os:hover{
+    background-color: #4444ff;
+  }
+
+  .submit-btn {
+    margin-top: 20px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    background-color: #b780ce;
+    color: white;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: 400;
+  }
+
+  .submit-btn:hover {
+    background-color: #218838;
+  }
+
+  
+  

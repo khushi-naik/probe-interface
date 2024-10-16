@@ -1,0 +1,62 @@
+body {
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: white;
+    background-color: #000;
+}
+
+.container {    
+    justify-content: center;
+    width: 95%;
+    height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 3%;
+}
+
+.notification {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 15px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: none; /* Initially hidden */
+  }
+
+.hr-td{
+    background-color: #66ff66;
+}
+
+.bp-td{
+    background-color: #ff6666;
+}
+
+.os-td{
+    background-color: #6666ff;
+}
+
+th{
+    background-color: rgb(50, 48, 48);
+}
+
+.submit-button-container{
+    text-align: center;
+}
+
+.submit-btn {
+    margin-top: 20px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    background-color: #b780ce;
+    color: white;
+    cursor: pointer;
+    font-size: 38px;
+    font-weight: 400;
+  }
+
+.submit-btn:hover {
+    background-color: #218838;
+}

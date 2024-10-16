@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Identificaton</title>
+    <link rel="stylesheet" href="/stylesAlarm.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            font-size: 37px;
+            height: 15vh;  
+        }
+
+        .button-cell {
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
+
+        .selected {
+            background-color: #fe8c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Alarm Identification</h1>
+        <% if (message) { %>
+            <div id="notification" class="notification"><%= message %></div>
+        <% } %>
+
+        <form id="vitalsForm" action="/alarmsubmit" method="POST">
+            <table id="vitalsTable">
+                <thead>
+                    <tr>
+                        <th>Vital Sign</th>
+                        <th>(<img src="down.png" alt="vlow Icon"><img src="down.png" alt="vlow Icon">) Very Low</th>
+                        <th>(<img src="down.png" alt="low Icon">) Low</th>
+                        <th>Static</th>
+                        <th>(<img src="up.png" alt="high Icon">) High</th>
+                        <th>(<img src="up.png" alt="vhigh Icon"><img src="up.png" alt="vhigh Icon">) Very High</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="hr-td"><img src="hr.png" alt="Heart Rate Icon"> Heart Rate</td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="Very Low"></td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="Low"></td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="Static"></td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="High"></td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="Very High"></td>
+                    </tr>
+                    <tr>
+                        <td class="bp-td"><img src="bp.png" alt="blood pressure Icon"> Blood Pressure</td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="Very Low"></td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="Low"></td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="Static"></td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="High"></td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="Very High"></td>
+                    </tr>
+                    <tr>
+                        <td class="os-td"><img src="os.png" alt="oxygen Icon"> Oxygen Saturation</td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Very Low"></td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Low"></td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Static"></td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="High"></td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Very High"></td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <input type="hidden" id="selectedData" name="alarmInputData">
+            <div class="submit-button-container">
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+            
+            
+        </form>
+        <div>
+            <button> <a href="/probe">Probe</a></button>
+        </div>
+    </div>
+
+
+    <script>
+        let selectedData = {};  // Object to store user selections
+
+        document.querySelectorAll('.button-cell').forEach(cell => {
+            cell.addEventListener('click', function () {
+                const vital = this.getAttribute('data-vital');
+                const value = this.getAttribute('data-value');
+                const timestamp = new Date().toISOString();
+
+                // Store the selection for the clicked vital
+                selectedData[vital] = { value: value, timestamp: timestamp };
+
+                // Deselect any previously selected cell in the same row
+                this.parentElement.querySelectorAll('.button-cell').forEach(sibling => {
+                    sibling.classList.remove('selected');
+                });
+
+                // Mark the clicked cell as selected
+                this.classList.add('selected');
+
+                // Update the hidden input with the selected data as JSON
+                document.getElementById('selectedData').value = JSON.stringify(selectedData);
+                console.log(document.getElementById('selectedData').value);
+            });
+        });
+
+        document.getElementById('vitalsForm').addEventListener('submit', function (event) {
+            // Allow submission even if only 1 or 2 vitals are selected
+            console.log("inside listen event!!");
+            
+            if (Object.keys(selectedData).length === 0) {
+                event.preventDefault(); // Prevent form submission if no vitals are selected
+                alert('Please select at least one vital sign.');
+            } else {
+                // Update the hidden input field with the final data
+                console.log("inside event!!");
+                console.log(selectedData.length);
+                document.getElementById('selectedData').value = JSON.stringify(selectedData);
+            }
+        });
+
+        window.onload = function() {
+            var notification = document.getElementById('notification');
+            if (notification) {
+                notification.style.display = 'block';
+                setTimeout(function() {
+                notification.style.display = 'none';
+             }, 3000); // Hide after 3 seconds
+            }
+        }
+    </script>
+</body>
+</html>

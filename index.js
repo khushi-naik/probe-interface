@@ -39,6 +39,12 @@ app.post('/alarm', (req, res) => {
   res.redirect('/alarm');
 })
 
+app.get('/trend', (req,res)=>{
+  const message = req.session.trendmessage;
+  req.session.trendmessage = null;
+  res.render('trendIdentification', { message });
+})
+
 app.get('/probe', (req, res) => {
   const message = req.session.message;
   const vitalState  = req.session.vitalState;
@@ -83,6 +89,45 @@ app.post('/alarmsubmit', async (req,res) => {
   xlsx.writeFile(workbook, filePath);
   req.session.alarmmessage = 'Alarm Data has been saved successfully!';
   res.redirect('/alarm');
+});
+
+app.post('/trendsubmit', async (req,res) => {
+  const { participantNumber, date, blockName} = req.session;
+  const { trendInputData } = req.body;
+  if(!trendInputData){
+    req.session.alarmmessage = 'Trend data not provided!';
+    return res.redirect('/trend');
+  }
+  console.log("trend input data "+trendInputData + " length ");
+  const trendData = JSON.parse(trendInputData);
+  const filePath = path.join(__dirname, 'trendData.xlsx');
+  let workbook;
+
+  if(fs.existsSync(filePath)){
+    workbook = xlsx.readFile(filePath);
+  }
+  else{
+    workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.aoa_to_sheet([["Date", "Participant Number"
+    , "Block Name", "Probe number", "Vital Sign", "Trend", "Timestamp" ]]);
+    xlsx.utils.book_append_sheet(workbook,worksheet,'Sheet1');
+    xlsx.writeFile(workbook, filePath);
+  }
+
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  const latestProbeNumber = getLatestAlarmNumber(worksheet);
+  const newProbeNumber = latestProbeNumber+1;
+
+  Object.keys(trendData).forEach((vital) => {
+    const { value, timestamp } = trendData[vital];
+    const newRow = [date, participantNumber, blockName, newProbeNumber, vital, value, timestamp]; // Include alarm number
+    xlsx.utils.sheet_add_aoa(worksheet, [newRow], { origin: -1 });
+  });
+
+  // Write to file
+  xlsx.writeFile(workbook, filePath);
+  req.session.trendmessage = 'Trend Data has been saved successfully!';
+  res.redirect('/trend');
 });
 
 app.post('/submit', async (req, res) => {
@@ -131,7 +176,7 @@ app.post('/submit', async (req, res) => {
     //res.send('Data appended to Excel sheet');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

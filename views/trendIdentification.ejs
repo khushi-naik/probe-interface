@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alarm Identificaton</title>
+    <title>Trend Identificaton</title>
     <link rel="stylesheet" href="/stylesAlarm.css">
     <style>
         table {
@@ -32,52 +32,47 @@
 </head>
 <body>
     <div class="container">
-        <h1>Alarm Identification</h1>
+        <h1>Trend Identification</h1>
         <% if (message) { %>
             <div id="notification" class="notification"><%= message %></div>
         <% } %>
 
-        <form id="vitalsForm" action="/alarmsubmit" method="POST">
+        <form id="vitalsForm" action="/trendsubmit" method="POST">
             <table id="vitalsTable">
                 <thead>
                     <tr>
                         <th>Vital Sign</th>
-                        <th>(<img src="down.png" alt="vlow Icon"><img src="down.png" alt="vlow Icon">) Very Low</th>
-                        <th>(<img src="down.png" alt="low Icon">) Low</th>
+                        <th>(<img src="decrease.png" alt="decreasing Icon">) Decreasing</th>
                         <th>Static</th>
-                        <th>(<img src="up.png" alt="high Icon">) High</th>
-                        <th>(<img src="up.png" alt="vhigh Icon"><img src="up.png" alt="vhigh Icon">) Very High</th>
+                        <th>(<img src="increase.png" alt="increasing Icon">) Increasing</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="hr-td"><img src="hr.png" alt="Heart Rate Icon"> Heart Rate</td>
-                        <td class="button-cell" data-vital="Heart Rate" data-value="Very Low"></td>
-                        <td class="button-cell" data-vital="Heart Rate" data-value="Low"></td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="Decreasing"></td>
                         <td class="button-cell" data-vital="Heart Rate" data-value="Static"></td>
-                        <td class="button-cell" data-vital="Heart Rate" data-value="High"></td>
-                        <td class="button-cell" data-vital="Heart Rate" data-value="Very High"></td>
+                        <td class="button-cell" data-vital="Heart Rate" data-value="Increasing"></td>
+        
                     </tr>
                     <tr>
                         <td class="bp-td"><img src="bp.png" alt="blood pressure Icon"> Blood Pressure</td>
-                        <td class="button-cell" data-vital="Blood Pressure" data-value="Very Low"></td>
-                        <td class="button-cell" data-vital="Blood Pressure" data-value="Low"></td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="Decreasing"></td>
                         <td class="button-cell" data-vital="Blood Pressure" data-value="Static"></td>
-                        <td class="button-cell" data-vital="Blood Pressure" data-value="High"></td>
-                        <td class="button-cell" data-vital="Blood Pressure" data-value="Very High"></td>
+                        <td class="button-cell" data-vital="Blood Pressure" data-value="Increasing"></td>
+                       
                     </tr>
                     <tr>
                         <td class="os-td"><img src="os.png" alt="oxygen Icon"> Oxygen Saturation</td>
-                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Very Low"></td>
-                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Low"></td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Decreasing"></td>
                         <td class="button-cell" data-vital="Oxygen Saturation" data-value="Static"></td>
-                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="High"></td>
-                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Very High"></td>
+                        <td class="button-cell" data-vital="Oxygen Saturation" data-value="Increasing"></td>
+                        
                     </tr>
                 </tbody>
             </table>
     
-            <input type="hidden" id="selectedData" name="alarmInputData">
+            <input type="hidden" id="selectedData" name="trendInputData">
             <div class="submit-button-container">
                 <button type="submit" class="submit-btn">Submit</button>
             </div>
@@ -85,7 +80,7 @@
             
         </form>
         <div>
-            <button> <a href="/trend">Probe</a></button>
+            <button> <a href="/alarm">Alarm</a></button>
         </div>
     </div>
 
@@ -120,9 +115,9 @@
             // Allow submission even if only 1 or 2 vitals are selected
             console.log("inside listen event!!");
             
-            if (Object.keys(selectedData).length === 0) {
+            if (Object.keys(selectedData).length !== 3) {
                 event.preventDefault(); // Prevent form submission if no vitals are selected
-                alert('Please select at least one vital sign.');
+                alert('Please select one trend for each vital sign!');
             } else {
                 // Update the hidden input field with the final data
                 console.log("inside event!!");

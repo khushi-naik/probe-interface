@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const xlsx = require('xlsx');
 const path = require('path');
 const fs = require('fs');
+const net = require('net');
 const session = require('express-session');
 
 
@@ -21,6 +22,37 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+// TCP server setup
+const TCP_PORT = 80; // Port for the TCP server
+const tcpServer = net.createServer((socket) => {
+  console.log('TCP client connected');
+
+  // Handle incoming data from the Unity application
+  socket.on('data', (data) => {
+    console.log('Received data from Unity:', data.toString());
+    
+    // You can add your data processing logic here
+    // For example, parse the data and save it to a file or send a response
+
+  });
+
+  // Handle client disconnection
+  socket.on('end', () => {
+    console.log('TCP client disconnected');
+  });
+
+  // Handle errors
+  socket.on('error', (err) => {
+    console.error('TCP server error:', err);
+  });
+});
+
+// Start the TCP server
+tcpServer.listen(TCP_PORT, () => {
+  console.log(`TCP server is running on port ${TCP_PORT}`);
+});
+
 
 app.get('/', (req, res) => {
   res.render('index');

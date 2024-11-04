@@ -24,7 +24,7 @@ app.use(session({
 }));
 
 // TCP server setup
-const TCP_PORT = 80; // Port for the TCP server
+/*const TCP_PORT = 80; // Port for the TCP server
 const tcpServer = net.createServer((socket) => {
   console.log('TCP client connected');
 
@@ -52,7 +52,7 @@ const tcpServer = net.createServer((socket) => {
 tcpServer.listen(TCP_PORT, () => {
   console.log(`TCP server is running on port ${TCP_PORT}`);
 });
-
+*/
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -93,7 +93,7 @@ app.post('/alarmsubmit', async (req,res) => {
   }
   console.log("alarm input data "+alarmInputData + " length ");
   const alarmData = JSON.parse(alarmInputData);
-  const filePath = path.join(__dirname, 'alarmData.xlsx');
+  const filePath = path.join(__dirname, req.session.participantNumber+'alarmData.xlsx');
   let workbook;
 
   if(fs.existsSync(filePath)){
@@ -132,7 +132,7 @@ app.post('/trendsubmit', async (req,res) => {
   }
   console.log("trend input data "+trendInputData + " length ");
   const trendData = JSON.parse(trendInputData);
-  const filePath = path.join(__dirname, 'trendData.xlsx');
+  const filePath = path.join(__dirname, req.session.participantNumber+'trendData.xlsx');
   let workbook;
 
   if(fs.existsSync(filePath)){
@@ -208,7 +208,7 @@ app.post('/submit', async (req, res) => {
     //res.send('Data appended to Excel sheet');
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const net = require('net');
 const session = require('express-session');
+const Photon = require('photon-realtime');
 
 
 const app = express();
@@ -16,12 +17,25 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // to serve HTML form
+const photon = require('./public/photon-javascript-sdk_v4-3-2-0/lib/photon');
 
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true
 }));
+
+//const LBC = Photon.LoadBalancing.LoadBalancingClient;
+//const lbc = new LBC(Photon.ConnectionProtocol.Ws, "fa89b33d-4615-4a4e-8d53-2543ab02a103", "1.0");
+
+//const client = new Photon.Connection();
+/*client.connect({
+    appId: "fa89b33d-4615-4a4e-8d53-2543ab02a103", // Replace with your App ID
+    appVersion: "1.0",
+    region: "cae",         // Replace with your region
+});*/
+
+//lbc.connectToRegionMaster("cae");
 
 // TCP server setup
 /*const TCP_PORT = 80; // Port for the TCP server
@@ -86,12 +100,12 @@ app.get('/probe', (req, res) => {
 
 app.post('/alarmsubmit', async (req,res) => {
   const { participantNumber, date, blockName} = req.session;
-  const { alarmInputData } = req.body;
+  const { alarmInputData, lateReport } = req.body;
   if(!alarmInputData){
     req.session.alarmmessage = 'Alarm data not provided!';
     return res.redirect('/alarm');
   }
-  console.log("alarm input data "+alarmInputData + " length ");
+  console.log("alarm input data "+alarmInputData + " lateReport "+ lateReport);
   const alarmData = JSON.parse(alarmInputData);
   const filePath = path.join(__dirname, req.session.participantNumber+'alarmData.xlsx');
   let workbook;
@@ -102,7 +116,7 @@ app.post('/alarmsubmit', async (req,res) => {
   else{
     workbook = xlsx.utils.book_new();
     const worksheet = xlsx.utils.aoa_to_sheet([["Date", "Participant Number"
-    , "Block Name", "Alarm number", "Vital Sign", "Value", "Timestamp" ]]);
+    , "Block Name", "Alarm number", "Vital Sign", "Value", "Timestamp", "Late Report" ]]);
     xlsx.utils.book_append_sheet(workbook,worksheet,'Sheet1');
     xlsx.writeFile(workbook, filePath);
   }
@@ -113,7 +127,7 @@ app.post('/alarmsubmit', async (req,res) => {
 
   Object.keys(alarmData).forEach((vital) => {
     const { value, timestamp } = alarmData[vital];
-    const newRow = [date, participantNumber, blockName, newAlarmNumber, vital, value, timestamp]; // Include alarm number
+    const newRow = [date, participantNumber, blockName, newAlarmNumber, vital, value, timestamp, lateReport]; // Include alarm number
     xlsx.utils.sheet_add_aoa(worksheet, [newRow], { origin: -1 });
   });
 

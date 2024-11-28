@@ -46,10 +46,10 @@ th{
 }
 
 .submit-btn {
-    margin-top: 20px;
-    padding: 15px 30px;
+    margin-top: 5vh;
+    padding: 2vh 4vh;
     border: none;
-    border-radius: 5px;
+    border-radius: 1vh;
     background-color: #b780ce;
     color: white;
     cursor: pointer;

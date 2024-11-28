@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const net = require('net');
 const session = require('express-session');
-const Photon = require('photon-realtime');
+//const Photon = require('photon-realtime');
 
 
 const app = express();
@@ -17,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // to serve HTML form
-const photon = require('./public/photon-javascript-sdk_v4-3-2-0/lib/photon');
+//const photon = require('./public/photon-javascript-sdk_v4-3-2-0/lib/photon');
 
 app.use(session({
   secret: 'your-secret-key',
